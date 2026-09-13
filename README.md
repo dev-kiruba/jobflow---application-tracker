@@ -1,117 +1,210 @@
-# Job Application Tracker
+# Jobflow — Application OS
 
-A full-stack web app to track job applications — company, role, status,
-dates, and notes — with a dashboard showing upcoming deadlines. Built with
-Django (handles frontend, backend, and database together), MySQL, and
-deployed as a single live app on Railway.
+> A modern Django SaaS-style job application tracker designed to help job seekers organize applications, manage interview progress, and keep their job search moving.
 
-## Why this exists
+## 🚦 Application Flow
 
-Tracking job applications in a spreadsheet gets messy fast. This gives each
-application a status (Applied → Interviewing → Offer / Rejected /
-Withdrawn), a next-action date, and a dashboard that surfaces what needs
-attention in the next two weeks.
+![Jobflow Application Flow](docs/jobflow_application_flow.png)
 
-## Tech stack
+The flow above gives a quick visual overview of how a visitor moves from the public landing page into Demo Mode or authentication, then into the protected application workspace.
 
-- **Django** — handles routing, business logic, and renders the HTML pages
-  directly (no separate frontend framework)
-- **MySQL** — stores users and applications
-- **PyMySQL** — pure-Python MySQL driver (avoids native build tools some
-  Windows setups struggle with)
-- **Whitenoise** — serves CSS/static files in production without a separate
-  file host
-- **Gunicorn** — production web server (used when deployed; `runserver` is
-  used locally)
+## 🖥️ Project Showcase
 
-## Project structure
+A quick visual tour of the current Jobflow interface.
 
+### Landing Page
+
+![Jobflow Landing Page](docs/landing_preview.png)
+
+### Dashboard
+
+![Jobflow Dashboard](docs/dashboard_preview.png)
+
+### Application Pipeline
+
+![Jobflow Pipeline](docs/pipeline_preview.png)
+
+## ✨ What is Jobflow?
+
+Jobflow is a full-stack Django web application for managing a job search from application to outcome.
+
+Instead of keeping applications across spreadsheets, browser tabs, notes, and reminders, Jobflow brings the workflow into one focused workspace.
+
+**Core workflow:**
+
+`Discover → Apply → Track → Interview → Follow up → Offer / Outcome`
+
+## 🚀 Highlights
+
+- Modern SaaS-style responsive interface
+- Public landing page
+- Read-only Demo Mode with sample data
+- User registration and authentication
+- Personal application pipeline
+- Kanban-style status tracking
+- Application create / edit / delete
+- Search and filtering
+- Dashboard statistics
+- Upcoming-action tracking
+- User-owned application data isolation
+- Django backend with MySQL-compatible persistence
+- Reusable templates, CSS, and JavaScript
+
+## 📚 Project Documentation
+
+Detailed project documentation is included in the repository:
+
+| Document | What it covers |
+|---|---|
+| 📘 [User Manual](docs/01_Jobflow_User_Manual.pdf) | Complete guide to using Jobflow with practical examples |
+| 🧠 [Project Deep Dive](docs/02_Jobflow_Project_Deep_Dive.pdf) | Product, architecture, Django structure, database, frontend, security, and engineering decisions |
+| 🐛 [Issues & Lessons Learned](docs/03_Jobflow_Issues_and_Lessons_Learned.pdf) | Real debugging challenges, fixes, decisions, and lessons learned |
+| 🗺️ [Application Flow](docs/jobflow_application_flow.png) | Visual overview of the complete application flow |
+
+## 🏗️ Architecture
+
+```text
+Browser
+   │
+   ▼
+Django URLs
+   │
+   ▼
+Views + Forms
+   │
+   ├── Authentication
+   ├── Application CRUD
+   ├── Status Updates
+   └── Dashboard Data
+   │
+   ▼
+Django Models
+   │
+   ▼
+MySQL Database
 ```
-job_tracker/
-├── manage.py
-├── job_tracker/            # project settings & routing
-│   ├── settings.py
-│   ├── urls.py
-│   └── wsgi.py
-├── tracker/                 # the actual app
-│   ├── models.py               # Application model
-│   ├── forms.py                 # ModelForm + registration form
-│   ├── views.py                  # dashboard, CRUD views
-│   ├── urls.py
-│   ├── admin.py
-│   ├── templates/tracker/        # all HTML pages
-│   └── static/tracker/style.css
-├── requirements.txt
-├── .env.example
-└── Procfile                  # tells Railway/Render how to run this in production
+
+The frontend uses Django templates with CSS and vanilla JavaScript for interactive behaviour such as pipeline actions, dashboard interactions, filtering, and UI enhancements.
+
+## 🛠️ Tech Stack
+
+**Backend**
+- Python
+- Django
+
+**Frontend**
+- HTML
+- CSS
+- JavaScript
+- Django Templates
+
+**Database**
+- MySQL / MySQL-compatible relational database
+
+**Development & Deployment**
+- Git / GitHub
+- Gunicorn-ready `Procfile`
+- Environment-based configuration
+
+## 🔐 Security & Privacy
+
+Jobflow is designed around authenticated, user-owned application data.
+
+- Authentication protects private application pages.
+- Application queries are scoped to the signed-in user.
+- Secrets and local environment files are excluded from Git.
+- Production deployment should use environment variables for credentials and secret configuration.
+- Demo Mode uses fictional sample data rather than personal application records.
+
+## 💻 Local Setup
+
+Clone the repository:
+
+```bash
+git clone https://github.com/dev-kiruba/jobflow---application-tracker.git
+cd jobflow---application-tracker
 ```
 
-## Local setup
+Create a virtual environment:
 
 ```bash
 python -m venv venv
-venv\Scripts\activate          # Windows
+```
+
+Activate it on Windows:
+
+```powershell
+venv\Scripts\activate
+```
+
+Install dependencies:
+
+```bash
 pip install -r requirements.txt
 ```
 
-Create the database:
-```sql
-mysql -u root -p
-CREATE DATABASE job_tracker_db;
-EXIT;
-```
+Create your local environment configuration from `.env.example`.
 
-Configure environment:
-```bash
-copy .env.example .env
-```
-Edit `.env` and set `DB_PASSWORD` to your MySQL password, and generate a
-real `SECRET_KEY`:
-```bash
-python -c "import secrets; print(secrets.token_hex(32))"
-```
+Run database migrations:
 
-Create the database tables (Django's equivalent of `Base.metadata.create_all`,
-but versioned — this is what Alembic does for SQLAlchemy):
 ```bash
-python manage.py makemigrations
 python manage.py migrate
 ```
 
-Create an admin account (optional, lets you use `/admin`):
-```bash
-python manage.py createsuperuser
-```
+Start the development server:
 
-Run it:
 ```bash
 python manage.py runserver
 ```
 
-Visit **http://127.0.0.1:8000** — sign up, log in, and start adding
-applications.
+Then open:
 
-## Deploying live (Railway)
+```text
+http://127.0.0.1:8000/
+```
 
-1. Push this project to GitHub (same process as the expense tracker).
-2. Create a Railway account at railway.app and start a **New Project**.
-3. Choose **Deploy from GitHub repo** and select this repository.
-4. Add a **MySQL** database plugin from Railway's marketplace inside the
-   same project — it will generate its own connection details.
-5. In your web service's **Variables** tab, set the same variables as your
-   `.env` file (`SECRET_KEY`, `DEBUG=False`, `ALLOWED_HOSTS` set to your
-   Railway domain, and the `DB_*` variables copied from the MySQL plugin's
-   connection info).
-6. Railway automatically detects the `Procfile` and runs `gunicorn`, plus
-   the migration on each deploy.
-7. Once deployed, Railway gives you a public URL like
-   `job-tracker-production.up.railway.app` — this is the link you can send
-   to anyone, including an interviewer.
+## 🧪 Main Routes
 
-## Features
+| Route | Purpose |
+|---|---|
+| `/` | Public landing page |
+| `/demo/` | Public read-only demo |
+| `/login/` | User login |
+| `/register/` | User registration |
+| `/app/` | Authenticated application workspace |
+| `/app/dashboard/` | Dashboard |
+| `/app/applications/` | Application list |
 
-- Register / login / logout (Django's built-in auth system)
-- Add, edit, delete job applications
-- Filter applications by status
-- Dashboard with per-status counts and a 14-day upcoming deadlines view
-- Per-user data isolation — every query is scoped to `request.user`
+## 🎯 Why I Built It
+
+Jobflow started as a simple job application tracker and evolved into a more complete SaaS-style product through iterative design, debugging, and feature improvements.
+
+The project focuses on more than making CRUD operations work. It explores:
+
+- product-oriented UI design
+- practical Django architecture
+- authenticated multi-user data handling
+- interactive workflow design
+- debugging and problem solving
+- documentation
+- production deployment preparation
+
+## 📈 Future Roadmap
+
+Planned improvements include:
+
+- Interview tracking
+- Follow-up reminders
+- richer analytics
+- job-source tracking
+- email/calendar integrations
+- improved mobile experience
+- production deployment
+- custom domain
+- additional automation
+
+## 👤 Author
+
+**Kiruba**
+
+Built as a portfolio project demonstrating full-stack Python/Django development, product thinking, UI/UX iteration, debugging, and deployment readiness.
