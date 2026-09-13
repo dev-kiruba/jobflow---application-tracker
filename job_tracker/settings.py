@@ -2,6 +2,7 @@
 Django settings for the Job Application Tracker.
 """
 import os
+import dj_database_url
 from pathlib import Path
 from dotenv import load_dotenv
 
@@ -59,17 +60,15 @@ TEMPLATES = [
 WSGI_APPLICATION = "job_tracker.wsgi.application"
 
 # ---------- Database ----------
-# Matches the same MySQL setup style used in the expense tracker project.
+# PostgreSQL configuration; DATABASE_URL is loaded from .env locally
 DATABASES = {
-    "default": {
-        "ENGINE": "django.db.backends.mysql",
-        "NAME": os.environ.get("DB_NAME", "job_tracker_db"),
-        "USER": os.environ.get("DB_USER", "root"),
-        "PASSWORD": os.environ.get("DB_PASSWORD", ""),
-        "HOST": os.environ.get("DB_HOST", "localhost"),
-        "PORT": os.environ.get("DB_PORT", "3306"),
-        "OPTIONS": {"charset": "utf8mb4"},
-    }
+    "default": dj_database_url.config(
+        default=os.environ.get(
+            "DATABASE_URL",
+            "postgresql://postgres:YOUR_PASSWORD@localhost:5432/job_tracker_db",
+        ),
+        conn_max_age=600,
+    )
 }
 
 # ---------- Password validation ----------
