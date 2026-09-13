@@ -1,0 +1,43 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0"><meta name="theme-color" content="#080a10">
+<title>Jobflow — Application OS</title><link rel="stylesheet" href="{% static 'tracker/style.css' %}">
+</head>
+<body class="landing-page">
+<div class="landing-glow glow-one"></div><div class="landing-glow glow-two"></div>
+<nav class="landing-nav">
+  <a href="{% url 'landing' %}" class="landing-brand"><span class="brand-mark"><span></span></span><span><strong>Jobflow</strong><small>Application OS</small></span></a>
+  <div class="landing-nav-links"><a href="#features">Features</a><a href="#workflow">How it works</a></div>
+  <div class="landing-nav-actions"><a href="{% url 'login' %}" class="landing-login">Sign in</a><a href="{% url 'register' %}" class="landing-nav-cta">Get started <span>→</span></a></div>
+</nav>
+<main>
+<section class="landing-hero">
+  <div class="landing-pill"><span></span> Your job search, finally organized</div>
+  <h1>Turn applications<br><em>into offers.</em></h1>
+  <p>Jobflow gives your job search a calm, focused workspace. Track every application, stay ahead of follow-ups, and see your progress at a glance.</p>
+  <div class="landing-actions"><a class="landing-primary" href="{% url 'demo' %}">View live demo <span>↗</span></a><a class="landing-secondary" href="{% url 'register' %}">Create free workspace</a></div>
+  <div class="landing-proof"><span class="proof-avatars"><i>J</i><i>A</i><i>R</i><i>+</i></span><span>Built for focused job seekers</span><b>•</b><span>Free to start</span></div>
+</section>
+<section class="product-preview" id="workflow">
+  <div class="preview-window"><div class="preview-bar"><div class="preview-dots"><i></i><i></i><i></i></div><span>jobflow / pipeline</span><div class="preview-live">● Live</div></div>
+    <div class="preview-layout"><aside><div class="mini-brand"><span class="brand-mark"><span></span></span><b>Jobflow</b></div><div class="mini-label">WORKSPACE</div><div class="mini-nav active">▦ <span>Pipeline</span></div><div class="mini-nav">☷ <span>Applications</span></div><div class="mini-nav">↗ <span>Insights</span></div><div class="mini-add">＋ New application</div><div class="mini-tip">✦ <span><b>Keep momentum</b><small>Review your next actions.</small></span></div></aside>
+      <div class="preview-main"><div class="preview-heading"><div><small>APPLICATION PIPELINE</small><h2>Your job search, at a glance.</h2><p>Track where every opportunity stands.</p></div><button>＋ Add application</button></div><div class="preview-columns">
+        <div class="mini-column"><header>Applied <b>3</b></header><article><strong>Product Designer</strong><span>Figma</span><small>Applied 2 days ago</small></article><article><strong>UX Designer</strong><span>Notion</span><small>Next action · Tomorrow</small></article></div>
+        <div class="mini-column"><header>Interviewing <b>2</b></header><article><strong>Product Designer</strong><span>Linear</span><small>Interview · Sep 18</small></article><article><strong>Frontend Engineer</strong><span>Vercel</span><small>Follow up · Sep 20</small></article></div>
+        <div class="mini-column"><header>Offer <b>1</b></header><article class="highlight"><strong>Product Designer</strong><span>Acme</span><small>Offer received</small></article></div>
+      </div></div>
+    </div>
+  </div>
+</section>
+<section class="landing-features" id="features"><div class="section-heading"><small>WHY JOBFLOW</small><h2>Less spreadsheet.<br>More momentum.</h2><p>Everything you need to manage the search without turning it into another job.</p></div><div class="feature-grid">
+  <article><span class="feature-icon">▦</span><h3>Visual pipeline</h3><p>Move applications through Applied, Interviewing, Offer and beyond with a clear Kanban workflow.</p></article>
+  <article><span class="feature-icon">↗</span><h3>Useful insights</h3><p>See your application volume, progress and upcoming actions without digging through rows.</p></article>
+  <article><span class="feature-icon">⌁</span><h3>Next actions</h3><p>Keep follow-ups visible so promising opportunities never disappear into your inbox.</p></article>
+  <article><span class="feature-icon">✦</span><h3>Focused workspace</h3><p>A quiet, polished interface designed to help you spend your energy on the search itself.</p></article>
+</div></section>
+<section class="landing-cta"><div><small>READY WHEN YOU ARE</small><h2>Give your job search<br>a better system.</h2></div><div><p>Start with a free workspace. Add your first application in under a minute.</p><a href="{% url 'register' %}" class="landing-primary">Create your workspace <span>→</span></a></div></section>
+</main>
+<footer class="landing-footer"><span>© 2026 Jobflow</span><span>Application OS for modern job seekers</span><a href="{% url 'login' %}">Sign in</a></footer>
+</body></html>

@@ -1,0 +1,82 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" content="#0b0d14">
+    <title>{% block title %}Job Tracker{% endblock %}</title>
+    <link rel="stylesheet" href="{% static 'tracker/style.css' %}">
+</head>
+<body class="{% if user.is_authenticated %}is-app{% else %}is-auth{% endif %}">
+<div class="app-bg" aria-hidden="true"><span></span><span></span><span></span></div>
+<div class="app-shell">
+    {% if user.is_authenticated %}
+    <button class="sidebar-toggle" id="sidebarToggle" aria-label="Toggle navigation" aria-expanded="false">
+        <span></span><span></span><span></span>
+    </button>
+    <div class="sidebar-backdrop" id="sidebarBackdrop"></div>
+    <aside class="sidebar" id="sidebar">
+        <a href="{% url 'board' %}" class="brand">
+            <span class="brand-mark"><span></span></span>
+            <span><strong>Jobflow</strong><small>Application OS</small></span>
+        </a>
+
+        <div class="nav-label">Workspace</div>
+        <nav class="side-nav">
+            <a href="{% url 'board' %}" class="side-link {% if request.resolver_match.url_name == 'board' %}active{% endif %}">
+                <span class="nav-icon">▦</span><span>Pipeline</span><kbd>1</kbd>
+            </a>
+            <a href="{% url 'application_list' %}" class="side-link {% if request.resolver_match.url_name == 'application_list' %}active{% endif %}">
+                <span class="nav-icon">☷</span><span>Applications</span><kbd>2</kbd>
+            </a>
+            <a href="{% url 'dashboard' %}" class="side-link {% if request.resolver_match.url_name == 'dashboard' %}active{% endif %}">
+                <span class="nav-icon">↗</span><span>Insights</span><kbd>3</kbd>
+            </a>
+        </nav>
+
+        <a href="{% url 'application_create' %}" class="side-add"><span>＋</span> New application <strong>⌘K</strong></a>
+
+        <div class="sidebar-tip">
+            <span class="tip-icon">✦</span>
+            <div><strong>Keep momentum</strong><small>Review your next actions every morning.</small></div>
+        </div>
+
+        <div class="side-footer">
+            <div class="side-user">
+                <span class="user-avatar">{{ user.username|slice:":1"|upper }}</span>
+                <span class="user-copy"><strong>{{ user.username }}</strong><small>Personal workspace</small></span>
+            </div>
+            <form method="post" action="{% url 'logout' %}">
+                {% csrf_token %}
+                <button type="submit" class="logout-button" title="Log out">↪</button>
+            </form>
+        </div>
+    </aside>
+    {% endif %}
+
+    <main class="main {% if not user.is_authenticated %}auth-main{% endif %}">
+        {% if user.is_authenticated %}
+        <header class="topbar">
+            <div class="breadcrumbs"><span>Workspace</span><i>/</i><strong>{% block breadcrumb %}Overview{% endblock %}</strong></div>
+            <div class="topbar-actions">
+                <span class="live-dot"><i></i> Live</span>
+                <a href="{% url 'application_create' %}" class="topbar-add">＋ Add application</a>
+                <span class="top-avatar">{{ user.username|slice:":1"|upper }}</span>
+            </div>
+        </header>
+        {% endif %}
+
+        {% if messages %}
+        <div class="alert-stack">
+            {% for message in messages %}<div class="alert alert-{{ message.tags }}"><span>✓</span>{{ message }}</div>{% endfor %}
+        </div>
+        {% endif %}
+
+        {% block content %}{% endblock %}
+    </main>
+</div>
+<script src="{% static 'tracker/main.js' %}"></script>
+{% block extra_js %}{% endblock %}
+</body>
+</html>

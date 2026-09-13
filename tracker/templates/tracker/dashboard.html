@@ -1,0 +1,20 @@
+{% extends "tracker/base.html" %}
+{% load static %}
+{% block title %}Insights — Jobflow{% endblock %}
+{% block breadcrumb %}Insights{% endblock %}
+{% block content %}
+<section class="page-hero">
+    <div><div class="eyebrow"><span class="eyebrow-dot"></span> YOUR WEEK AT A GLANCE</div><h1>Good work deserves <em>good visibility.</em></h1><p>You have <strong>{{ total }}</strong> application{{ total|pluralize }} in your pipeline.</p></div>
+    <a href="{% url 'application_create' %}" class="primary-button">＋ Add application</a>
+</section>
+<div class="stat-grid">
+    {% for label, count in status_counts.items %}<div class="stat-card stat-{{ forloop.counter }}"><div class="stat-head"><span>{{ label }}</span><i>↗</i></div><div class="stat-number" data-count-to="{{ count }}">0</div><div class="stat-foot"><span class="mini-bar"><i style="width:{% if total %}{% widthratio count total 100 %}{% else %}0{% endif %}%"></i></span>{% if total %}{% widthratio count total 100 %}% of pipeline{% else %}No applications yet{% endif %}</div></div>{% endfor %}
+</div>
+<div class="dashboard-grid">
+    <section class="panel chart-panel"><div class="panel-heading"><div><span class="panel-kicker">PIPELINE HEALTH</span><h2>Applications by status</h2></div><span class="panel-icon">◒</span></div><div class="chart-wrap"><canvas id="statusChart" width="760" height="300" role="img" aria-label="Applications by status"></canvas></div></section>
+    <section class="panel"><div class="panel-heading"><div><span class="panel-kicker">NEXT UP</span><h2>Upcoming actions</h2></div><a href="{% url 'application_list' %}" class="panel-link">View all →</a></div>{% if upcoming %}<ul class="activity-list">{% for app in upcoming %}<li><span class="activity-date">{{ app.next_action_date|date:"M j" }}</span><div><strong>{{ app.role }}</strong><small>{{ app.company }}</small></div><span class="badge {{ app.status_color }}">{{ app.get_status_display }}</span></li>{% endfor %}</ul>{% else %}<div class="panel-empty"><span>☀</span><strong>Nothing urgent.</strong><p>Your next two weeks are clear.</p></div>{% endif %}</section>
+</div>
+<section class="panel recent-panel"><div class="panel-heading"><div><span class="panel-kicker">ACTIVITY</span><h2>Recently added</h2></div><a href="{% url 'application_list' %}" class="panel-link">All applications →</a></div>{% if recent %}<div class="recent-grid">{% for app in recent %}<a class="recent-item" href="{% url 'application_update' app.pk %}"><span class="company-logo">{{ app.company|slice:":1"|upper }}</span><div><strong>{{ app.role }}</strong><small>{{ app.company }} · {{ app.date_applied|date:"M j" }}</small></div><span class="badge {{ app.status_color }}">{{ app.get_status_display }}</span><span class="recent-arrow">→</span></a>{% endfor %}</div>{% else %}<div class="panel-empty"><span>✦</span><strong>No applications yet.</strong><p><a href="{% url 'application_create' %}">Add your first one →</a></p></div>{% endif %}</section>
+<script id="chart-data" type="application/json">{{ chart_data|safe }}</script>
+{% endblock %}
+{% block extra_js %}<script src="{% static 'tracker/dashboard.js' %}"></script>{% endblock %}

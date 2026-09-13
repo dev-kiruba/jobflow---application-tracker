@@ -1,0 +1,7 @@
+{% extends "tracker/base.html" %}
+{% block title %}{{ heading }} — Jobflow{% endblock %}
+{% block breadcrumb %}{{ heading }}{% endblock %}
+{% block content %}
+<section class="page-hero compact-hero"><div><div class="eyebrow"><span class="eyebrow-dot"></span> APPLICATION WORKSPACE</div><h1>{{ heading|default:"Application" }} <em>details.</em></h1><p>Capture the useful details now. You can refine them anytime.</p></div></section>
+<div class="form-layout"><div class="form-main"><form method="post" class="app-form modern-form">{% csrf_token %}{% for field in form %}<div class="form-row {% if field.errors %}has-error{% endif %}"><label for="{{ field.id_for_label }}">{{ field.label }}</label>{{ field }}{% if field.help_text %}<small class="help-text">{{ field.help_text }}</small>{% endif %}{% for error in field.errors %}<small class="field-error">{{ error }}</small>{% endfor %}</div>{% endfor %}<div class="form-actions"><a href="{% url 'application_list' %}" class="secondary-button">Cancel</a><button type="submit" class="primary-button">Save application <span>→</span></button></div></form></div><aside class="form-aside"><div class="aside-card"><span class="aside-icon">✦</span><h3>Small details, big advantage.</h3><p>Add the next action date so important follow-ups never disappear from your radar.</p></div><div class="aside-card muted-card"><strong>Tip</strong><p>Keep notes short and actionable — interview topics, recruiter names, salary range, or your next follow-up.</p></div></aside></div>
+{% endblock %}

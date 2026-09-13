@@ -1,0 +1,64 @@
+{% extends "tracker/base.html" %}
+{% load static %}
+{% block title %}Pipeline — Jobflow{% endblock %}
+{% block breadcrumb %}Pipeline{% endblock %}
+{% block content %}
+<section class="page-hero compact-hero">
+    <div>
+        <div class="eyebrow"><span class="eyebrow-dot"></span> APPLICATION PIPELINE</div>
+        <h1>Turn applications into <em>offers.</em></h1>
+        <p>One calm workspace for every role, interview and follow-up.</p>
+    </div>
+    <div class="hero-actions">
+        <button class="ghost-button" id="boardSearchToggle">⌕ <span>Search</span><kbd>⌘ /</kbd></button>
+        <a href="{% url 'application_create' %}" class="primary-button">＋ New application</a>
+    </div>
+</section>
+
+<div class="board-toolbar">
+    <div class="board-summary"><strong>{{ total }}</strong> tracked application{{ total|pluralize }} <span>·</span> drag cards to update status</div>
+    <div class="search-wrap hidden-search" id="boardSearchWrap"><span>⌕</span><input type="search" id="boardSearch" placeholder="Search company or role…" aria-label="Search applications"></div>
+</div>
+
+<div class="board" id="board" data-status-url-template="{% url 'application_update_status' 0 %}">
+    {% for column in columns %}
+    <section class="board-column status-{{ column.key }}" data-status="{{ column.key }}">
+        <header class="column-header">
+            <div class="column-title"><span class="column-dot dot-{{ column.key }}"></span><h2>{{ column.label }}</h2></div>
+            <span class="column-count" data-count>{{ column.applications|length }}</span>
+        </header>
+        <div class="column-body" data-dropzone>
+            {% for app in column.applications %}
+            <article class="app-card" draggable="true" data-id="{{ app.pk }}" data-search="{{ app.company|lower }} {{ app.role|lower }}">
+                <div class="card-glow"></div>
+                <div class="card-body">
+                    <div class="card-topline"><span class="company-logo">{{ app.company|slice:":1"|upper }}</span><a href="{% if app.job_url %}{{ app.job_url }}{% else %}#{% endif %}" {% if app.job_url %}target="_blank" rel="noopener"{% endif %} class="card-link" title="{% if app.job_url %}Open job listing{% else %}No job link{% endif %}">↗</a></div>
+                    <strong class="card-role">{{ app.role }}</strong>
+                    <div class="card-company">{{ app.company }}</div>
+                    {% if app.notes %}<p class="card-note">{{ app.notes|truncatechars:72 }}</p>{% endif %}
+                    <div class="card-meta">
+                        <span>Applied {{ app.date_applied|date:"M j, Y" }}</span>
+                        {% if app.next_action_date %}<span class="card-deadline">Next action · {{ app.next_action_date|date:"M j" }}</span>{% else %}<span class="card-deadline card-deadline-muted">No next action</span>{% endif %}
+                    </div>
+                    <div class="card-footer">
+                        <label class="visually-hidden" for="status-{{ app.pk }}">Move to status</label>
+                        <select class="card-status-select" id="status-{{ app.pk }}" data-id="{{ app.pk }}">
+                            {% for key, label in status_choices %}<option value="{{ key }}" {% if key == app.status %}selected{% endif %}>{{ label }}</option>{% endfor %}
+                        </select>
+                        <div class="card-actions"><a href="{% url 'application_update' app.pk %}">Edit</a><a href="{% url 'application_delete' app.pk %}" class="text-danger">Delete</a></div>
+                    </div>
+                </div>
+            </article>
+            {% endfor %}
+            <div class="column-empty" data-empty {% if column.applications %}hidden{% endif %}>
+                <span>✦</span>
+                <strong>Nothing here yet</strong>
+                <small>Drop an application into this stage</small>
+            </div>
+        </div>
+    </section>
+    {% endfor %}
+</div>
+{% if total == 0 %}<div class="empty-state board-empty-hint"><div class="empty-icon">✦</div><h2>Your pipeline is waiting.</h2><p>Add your first application and start building momentum.</p><a href="{% url 'application_create' %}" class="primary-button">＋ Add first application</a></div>{% endif %}
+{% endblock %}
+{% block extra_js %}<script src="{% static 'tracker/board.js' %}"></script>{% endblock %}
