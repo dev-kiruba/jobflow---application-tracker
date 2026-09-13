@@ -14,7 +14,11 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = os.environ.get("SECRET_KEY", "unsafe-dev-key-change-me")
 DEBUG = os.environ.get("DEBUG", "True") == "True"
 ALLOWED_HOSTS = [
-    h.strip() for h in os.environ.get("ALLOWED_HOSTS", "localhost,127.0.0.1").split(",") if h.strip()
+    h.strip() for h in os.environ.get(
+        "ALLOWED_HOSTS",
+        "localhost,127.0.0.1,jobflow-application-tracker.onrender.com"
+    ).split(",")
+    if h.strip()
 ]
 
 # ---------- Applications ----------
